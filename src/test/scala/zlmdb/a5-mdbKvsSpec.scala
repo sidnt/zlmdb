@@ -60,3 +60,12 @@ object mdbKvsSpec extends DefaultRunnableSpec {
    * */
 
 }
+
+object mdbKvsSpec2 extends DefaultRunnableSpec {
+  import mdbKvsSpec._
+
+  val suite1: Spec[MdbKvs, TestFailure[Throwable], TestSuccess] =
+    suite("mdb key value store specs")(getPutTestM1, getPutTestM2)//.provideCustomLayer(layers.layer)
+
+  override def spec = ???
+}
