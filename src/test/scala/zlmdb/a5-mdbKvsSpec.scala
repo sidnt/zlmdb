@@ -55,17 +55,35 @@ object mdbKvsSpec extends DefaultRunnableSpec {
       getPutTestM1p,
       getPutTestM2p
     ) @@ sequential
-  /* PS: this test would become non-deterministic and fail if you were to not use the sequential test aspect
-   * because then the same environment's opening second time could be interleaved randomly with its closing from the first time
-   * */
+  /** PS: this test would become non-deterministic and fail if the `sequential` test aspect were not used
+    * as the layer is provided individually to both getPutTestM1p and getPutTestM2p, it would be acquired and released
+    * for both the tests, in parallel; and since the layer operates on the same resource (ie, the same lmdb environment)
+    * lmdbjava would throw as the same environment's opening second time could be interleaved non deterministically
+    * with its closing from the first time
+    * .
+    * this style of testing is inefficient, done sequentially, because the resource would be acquired and released twice
+    * when it should ideally have been acquired once before both the tests, and released once, after both the tests
+    * */
 
 }
 
 object mdbKvsSpec2 extends DefaultRunnableSpec {
   import mdbKvsSpec._
 
+  /** Here, we have composed both the tests into a suite,
+    * but both the tests have their layer dependency unsatisfied
+    * .
+    * this fact gets translated into the dependency type of the Spec itself
+    * but providing the fallible layer to this suite has weird interactions in the error channel
+    */
   val suite1: Spec[MdbKvs, TestFailure[Throwable], TestSuccess] =
     suite("mdb key value store specs")(getPutTestM1, getPutTestM2)//.provideCustomLayer(layers.layer)
 
+  val suite1p1: Spec[Any, Object, TestSuccess]              = suite1.provideLayer(layers.layer)
+  val suite1p2: Spec[Any, Object, TestSuccess]              = suite1.provideLayerShared(layers.layer)
+  val suite1p3: Spec[TestEnvironment, Object, TestSuccess]  = suite1.provideCustomLayer(layers.layer)
+  val suite1p4: Spec[TestEnvironment, Object, TestSuccess]  = suite1.provideCustomLayerShared(layers.layer)
+  
+  //type ZSpec[-R, +E] = Spec[R, TestFailure[E], TestSuccess]
   override def spec = ???
 }
