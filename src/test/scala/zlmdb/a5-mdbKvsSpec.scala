@@ -79,11 +79,13 @@ object mdbKvsSpec2 extends DefaultRunnableSpec {
   val suite1: Spec[MdbKvs, TestFailure[Throwable], TestSuccess] =
     suite("mdb key value store specs")(getPutTestM1, getPutTestM2)//.provideCustomLayer(layers.layer)
 
-  val suite1p1: Spec[Any, Object, TestSuccess]              = suite1.provideLayer(layers.layer)
-  val suite1p2: Spec[Any, Object, TestSuccess]              = suite1.provideLayerShared(layers.layer)
-  val suite1p3: Spec[TestEnvironment, Object, TestSuccess]  = suite1.provideCustomLayer(layers.layer)
-  val suite1p4: Spec[TestEnvironment, Object, TestSuccess]  = suite1.provideCustomLayerShared(layers.layer)
-  
+  val suite1p1: Spec[Any, Object, TestSuccess]                  = suite1.provideLayer(layers.layer)
+  val suite1p2: Spec[Any, Object, TestSuccess]                  = suite1.provideLayerShared(layers.layer)
+  val suite1p3: Spec[TestEnvironment, Object, TestSuccess]      = suite1.provideCustomLayer(layers.layer)
+  val suite1p4: Spec[TestEnvironment, Object, TestSuccess]      = suite1.provideCustomLayerShared(layers.layer)
+  val suite1p5: Spec[Any, TestFailure[Throwable], TestSuccess]  = suite1.provideLayerShared(layers.layer.orDie)
+
   //type ZSpec[-R, +E] = Spec[R, TestFailure[E], TestSuccess]
-  override def spec = ???
+  override def spec = suite1p5
+
 }
