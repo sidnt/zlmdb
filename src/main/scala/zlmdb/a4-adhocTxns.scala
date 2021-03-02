@@ -1,4 +1,4 @@
-package zio.lmdb
+package zlmdb
 
 import zio._
 import java.nio.ByteBuffer
