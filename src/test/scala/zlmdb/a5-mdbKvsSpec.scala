@@ -25,7 +25,7 @@ object mdbKvsSpec extends DefaultRunnableSpec {
       getPutTest1
     )
   
-  val getPutTestM1P: ZSpec[ZEnv, Throwable] =
+  val getPutTestM1p: ZSpec[ZEnv, Throwable] =
     testM("put & get test1")(
       getPutTest1.provideCustomLayer(layers.layer)
     )
@@ -45,15 +45,15 @@ object mdbKvsSpec extends DefaultRunnableSpec {
       getPutTest2
     )
 
-  val getPutTestM2P: ZSpec[ZEnv, Throwable] =
+  val getPutTestM2p: ZSpec[ZEnv, Throwable] =
     testM("put & get test2")(
       getPutTest2.provideCustomLayer(layers.layer)
     )
 
   def spec: ZSpec[ZEnv, Throwable] =
     suite("mdb key value store specs")(
-      getPutTestM1P,
-      getPutTestM2P
+      getPutTestM1p,
+      getPutTestM2p
     ) @@ sequential
   /* PS: this test would become non-deterministic and fail if you were to not use the sequential test aspect
    * because then the same environment's opening second time could be interleaved randomly with its closing from the first time
