@@ -9,6 +9,10 @@ import zio.blocking._
 
 object layers {
 
-  val layer: ZLayer[Any, Throwable, MdbKvs] = (defaultEnvConfigL ++ Blocking.live) >>> defaultMdbEnvHandleL >>> defaultMdbDbiL >>> defaultMdbKvs
+  val layer: ZLayer[Any, Throwable, MdbKvs] =
+    (defaultEnvConfigL ++ Blocking.live) >>>
+    defaultMdbEnvHandleL >>>
+    defaultMdbDbiL >>>
+    defaultMdbKvs
 
 }
